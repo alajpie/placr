@@ -11,8 +11,8 @@ Script for /r/place, the reddit april fools experiment for 2017.
 `requests`, `pillow`, `toml`
 ### TODO
 - [x] Text drawing
-- [ ] More convenient coordinate picker
+- [x] Multiple account support
 - [ ] Image drawing
-- [ ] Multiple account support
+
 ### Legal
 The FontStruction “3 by 5 Pixel Font” (https://fontstruct.com/fontstructions/show/716744) by “asciimario” is licensed under a Creative Commons Attribution Non-commercial No Derivatives license (http://creativecommons.org/licenses/by-nc-nd/3.0/).
