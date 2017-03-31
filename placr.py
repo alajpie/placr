@@ -1,21 +1,44 @@
 import requests as req
 import time
-import json
+import toml
 import os, sys
-
-# (x, y, color)
-pixels = [(123, 321, 15), (123, 321, 15)]
+from PIL import Image, ImageFont, ImageDraw
 
 def path():
     return os.path.dirname(os.path.realpath(sys.argv[0]))
 
+def chunks(l, n):
+    for i in range(0, len(l), n):
+        yield l[i:i + n]
+
 try:
-    conf = json.load(open(path()+"/config.json"))
+    conf = toml.load(open(path()+"/config.toml"))
     assert conf["user"] != "CHANGE_THIS"
     assert conf["pass"] != "CHANGE_THIS"
 except:
-    print("Please edit config.json!")
+    print("Please edit config.toml!")
     sys.exit(34)
+
+pixels = []
+text = conf["text"]
+bg = conf["background_color"]
+col = conf["text_color"]
+pos = conf["text_position"]
+fill = conf["fill_background"]
+font = ImageFont.truetype(path()+"/font.ttf", size=7)
+size = ImageDraw.Draw(Image.new("1", (0, 0))).textsize(text, font=font)
+size = (size[0]-1, size[1])
+img = Image.new("1", size, 0)
+draw = ImageDraw.Draw(img)
+draw.text((0, 0), text, 1, font=font)
+dots = list(chunks(list(img.getdata()), size[0]))
+
+for x, row in enumerate(dots):
+    for y, q in enumerate(row):
+        if fill and q == 0:
+            pixels.append((pos[0]+x, pos[1]+y, bg))
+        elif q == 1:
+            pixels.append((pos[0]+x, pos[1]+y, col))
 
 user = conf["user"]
 password = conf["pass"]
@@ -23,7 +46,7 @@ l = {"op": "login-main", "user": user, "passwd": password, "api_type": "json"}
 c = {}
 h = {"User-Agent": "Placr!"}
 try:
-    s = json.load(open(path()+"/save.json"))
+    s = toml.load(open(path()+"/save.toml"))
     assert s["u"] == user
 except:
     print("Getting session...", end="", flush=1)
@@ -39,7 +62,7 @@ except:
     r = req.get("https://www.reddit.com/api/me.json", cookies=c, headers=h)
     mh = r.json()["data"]["modhash"]
     print(" done!")
-    json.dump({"mh": mh, "rs": rs, "u": user}, open(path()+"/save.json", "w"))
+    toml.dump({"mh": mh, "rs": rs, "u": user}, open(path()+"/save.toml", "w"))
     print("Saving session and modhash... done!")
     h["X-Modhash"] = mh
 else:

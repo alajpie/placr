@@ -1,0 +1,7 @@
+user = "CHANGE_THIS"
+pass = "CHANGE_THIS"
+text = "hi!"
+background_color = 0    #number of color, as displayed on /r/place, starting from 0
+text_color = 5          #e.g. white is 0, black is 3 and red is 5
+text_position = [0, 0]  #coordinates of top left corner of text
+fill_background = false #whether to fill the background of the text with background_color
