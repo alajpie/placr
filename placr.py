@@ -53,12 +53,13 @@ toml.dump({"accounts":users}, open(path()+"/save.toml", "w"))
 pixels = []
 text = conf["text"]
 pos = conf["text_position"]
+pad = conf["padding"]
 font = ImageFont.truetype(path()+"/font.ttf", size=7)
 size = ImageDraw.Draw(Image.new("1", (0, 0))).textsize(text, font=font)
-size = (size[0]-1, size[1])
+size = (size[0]-1+pad*2, size[1]+pad*2)
 img = Image.new("1", size, 0)
 draw = ImageDraw.Draw(img)
-draw.text((0, 0), text, 1, font=font)
+draw.text((pad, pad), text, 1, font=font)
 dots = list(chunks(list(img.getdata()), size[0]))
 
 for y, row in enumerate(dots):
