@@ -15,10 +15,13 @@ You can also run it in a loop to protect text already drawn
 ### Requirements
 `requests`, `pillow`, `toml`
 ### TODO
-- [x] Text drawing
-- [x] Multiple account support
-- [ ] Color filling
-- [ ] Image drawing
+ - [x] Text drawing
+ - [x] Padding around text
+ - [x] Lazy background drawing (optional)
+ - [x] Multiple account support
+ - [ ] Border around text
+ - [ ] Color filling
+ - [ ] Image drawing
 
 ### Legal
 The FontStruction “3 by 5 Pixel Font” (https://fontstruct.com/fontstructions/show/716744) by “asciimario” is licensed under a Creative Commons Attribution Non-commercial No Derivatives license (http://creativecommons.org/licenses/by-nc-nd/3.0/).
