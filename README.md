@@ -1,6 +1,7 @@
 # placr
 Script for /r/place, the reddit april fools experiment for 2017.
 
+#### Note: This script is not guaranteed to work, as testing it is very hard due to reddit's limits.
 #### Pull requests welcome!
 
 ### Usage
