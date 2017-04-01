@@ -71,6 +71,8 @@ for y, row in enumerate(dots):
         elif q == 1:
             pixels.append((pos[0]+x, pos[1]+y, col))
 
+pixels.sort(key=lambda x: x[0])
+
 for i, pix in enumerate(pixels):
     d = {"x": pix[0], "y": pix[1], "color": pix[2]}
     while 1:
