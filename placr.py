@@ -2,14 +2,9 @@ import requests as req
 import time
 import toml
 import os, sys
-from PIL import Image, ImageFont, ImageDraw
 
 def path():
     return os.path.dirname(os.path.realpath(sys.argv[0]))
-
-def chunks(l, n):
-    for i in range(0, len(l), n):
-        yield l[i:i + n]
 
 conf = toml.load(open(path() + "/config.toml"))
 users = conf["accounts"]
@@ -51,28 +46,14 @@ for user in users:
     print(" done!")
 toml.dump({"accounts":users}, open(path() + "/save.toml", "w"))
 
+# x, y, color
 pixels = []
-text = conf["text"]
-pos = conf["text_position"]
-pad = conf["padding"]
-font = ImageFont.truetype(path() + "/font.ttf", size=7)
-size = ImageDraw.Draw(Image.new("1", (0, 0))).textsize(text, font=font)
-size = (size[0] -1 + pad * 2, size[1] + pad * 2)
-img = Image.new("1", size, 0)
-draw = ImageDraw.Draw(img)
-draw.text((pad, pad), text, 1, font=font)
-dots = list(chunks(list(img.getdata()), size[0]))
+pos = conf["position"]
+length = conf["length"]
 
-for y, row in enumerate(dots):
-    for x, col in enumerate(row):
-        if conf["fill_background"] and col == 0:
-            pixels.append((pos[0] + x, pos[1] + y, conf["background_color"], True))
-        elif col == 1:
-            pixels.append((pos[0] + x, pos[1] + y, conf["text_color"], False))
-
-pixels.sort(key=lambda x: x[0])
-if conf["background_later"]:
-    pixels.sort(key=lambda x: x[3])
+# populate vertical line
+for y in range(0, length):
+    pixels.append((pos[0], pos[1] + y, conf["color"]))
 
 print("Total pixels:", len(pixels))
 print("Calculating progress...", end="", flush=1)
