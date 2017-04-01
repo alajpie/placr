@@ -75,20 +75,23 @@ if conf["background_later"]:
 
 print("Total pixels:", len(pixels))
 print("Calculating progress...", end="", flush=1)
-for i, pix in enumerate(pixels[:]):
-    d = {"x": pix[0], "y": pix[1], "color": pix[2]}
-    r = req.get("https://www.reddit.com/api/place/pixel.json?x={}&y={}".format(d["x"], d["y"]), headers=h)
-    try:
-        if r.json()["color"] == d["color"]:
-            pixels.remove(pix)
-    except:
-        if d["color"] == 0: #blank pixel, never colored
-            pixels.remove(pix)
-print(" done!")
-print("Remaining pixels:", len(pixels))
-print("Estimated time to completion:")
-print("  with 5 min delay ->", len(pixels)/len(users)*5, "minutes")
-print("  with 10 min delay ->", len(pixels)/len(users)*10, "minutes")
+if len(pixels) > 200:
+    print(" skipping! (too many to check)")
+else:
+    for i, pix in enumerate(pixels[:]):
+        d = {"x": pix[0], "y": pix[1], "color": pix[2]}
+        r = req.get("https://www.reddit.com/api/place/pixel.json?x={}&y={}".format(d["x"], d["y"]), headers=h)
+        try:
+            if r.json()["color"] == d["color"]:
+                pixels.remove(pix)
+        except:
+            if d["color"] == 0: #blank pixel, never colored
+                pixels.remove(pix)
+    print(" done!")
+    print("Remaining pixels:", len(pixels))
+    print("Estimated time to completion:")
+    print("  with 5 min delay ->", len(pixels)/len(users)*5, "minutes")
+    print("  with 10 min delay ->", len(pixels)/len(users)*10, "minutes")
 print("Note: If the program is not displaying anything, it's waiting for an account to become available")
 
 for i, pix in enumerate(pixels):
@@ -109,7 +112,9 @@ for i, pix in enumerate(pixels):
                 print("Skipping pixel #{} ({}, {}) (already correct color)".format(i, d["x"], d["y"]))
                 break
         except:
-            pass
+            if d["color"] == 0: #blank pixel, never colored
+                print("Skipping pixel #{} ({}, {}) (already correct color)".format(i, d["x"], d["y"]))
+                break
         print("Drawing pixel #{} ({}, {}) with {}...".format(i, d["x"], d["y"], u["name"]), end="", flush=1)
         nh = {"X-Modhash": u["mh"]}
         nh.update(h)
