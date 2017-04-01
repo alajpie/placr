@@ -20,8 +20,10 @@ You can also run it in a loop to protect text already drawn
  - [x] Lazy background drawing (optional)
  - [x] Multiple account support
  - [ ] Border around text
+ - [ ] Line drawing (thanks [hawkfalcon](https://github.com/hawkfalcon)!)
  - [ ] Color filling
  - [ ] Image drawing
+ - [ ] Better variable names (thanks [hawkfalcon](https://github.com/hawkfalcon)!)
 
 ### Legal
 The FontStruction “3 by 5 Pixel Font” (https://fontstruct.com/fontstructions/show/716744) by “asciimario” is licensed under a Creative Commons Attribution Non-commercial No Derivatives license (http://creativecommons.org/licenses/by-nc-nd/3.0/).
