@@ -81,7 +81,8 @@ for i, pix in enumerate(pixels[:]):
         if r.json()["color"] == d["color"]:
             pixels.remove(pix)
     except:
-        pass
+        if d["color"] == 0: #blank pixel, never colored
+            pixels.remove(pix)
 print(" done!")
 print("Remaining pixels:", len(pixels))
 print("Estimated time to completion:")
