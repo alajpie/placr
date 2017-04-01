@@ -77,6 +77,8 @@ print("Total pixels:", len(pixels))
 print("Calculating progress...", end="", flush=1)
 if len(pixels) > 200:
     print(" skipping! (too many to check)")
+elif conf["always_restart"]:
+    print(' skipping! ("always_restart" enabled)')
 else:
     for i, pix in enumerate(pixels[:]):
         d = {"x": pix[0], "y": pix[1], "color": pix[2]}
