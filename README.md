@@ -1,6 +1,11 @@
 # placr
 Script for /r/place, the reddit april fools experiment for 2017.
 
+It can draw text on the canvas, and it automatically detects portions already drawn,
+so you can start and stop it at will.  
+You can also run it in a loop to protect text already drawn
+(it will fix any corruptions without wasting time on repainting already correct pixels).
+
 #### Pull requests welcome!
 
 ### Usage
@@ -12,6 +17,7 @@ Script for /r/place, the reddit april fools experiment for 2017.
 ### TODO
 - [x] Text drawing
 - [x] Multiple account support
+- [ ] Color filling
 - [ ] Image drawing
 
 ### Legal
