@@ -80,7 +80,7 @@ for i, pix in enumerate(pixels[:]):
     r = req.get("https://www.reddit.com/api/place/pixel.json?x={}&y={}".format(d["x"], d["y"]), headers=h)
     try:
         if r.json()["color"] == d["color"]:
-            del pixels[i]
+            pixels.remove(pix)
     except:
         pass
 print(" done!")
