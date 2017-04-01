@@ -4,6 +4,7 @@ text_color = 3          #e.g. white is 0, black is 3 and red is 5
 text_position = [0, 0]  #coordinates of top left corner of text
 fill_background = false #fill the background of the text with background_color
 background_later = true #draw background only after text is finished
+padding = 0             #padding around text (treated as background)
 [[accounts]]
 name = "CHANGE_THIS"
 pass = "CHANGE_THIS"
