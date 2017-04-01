@@ -23,7 +23,7 @@ try:
 except:
     save = []
 
-h = {"User-Agent": "Placr!"}
+h = {"User-Agent": "Placr! (https://github.com/k2l8m11n2/placr)"}
 for u in users:
     loaded = False
     for s in save:
@@ -84,12 +84,17 @@ for i, pix in enumerate(pixels):
             time.sleep(5)
 
     while 1:
+        r = req.get("https://www.reddit.com/api/place/pixel.json?x={}&y={}".format(d["x"], d["y"]), headers=h)
+        try:
+            if r.json()["color"] == d["color"]:
+                print("Skipping pixel #{} ({}, {}) (already correct color)".format(i, d["x"], d["y"]))
+                break
+        except:
+            pass
         print("Drawing pixel #{} ({}, {}) with {}...".format(i, d["x"], d["y"], u["name"]), end="", flush=1)
         nh = {"X-Modhash": u["mh"]}
         nh.update(h)
         r = req.post("https://www.reddit.com/api/place/draw.json", cookies={"reddit_session": u["rs"]}, headers=nh, data=d)
-        u["next"] = float(time.time()+r.json()["wait_seconds"])
-        toml.dump({"accounts":users}, open(path()+"/save.toml", "w"))
         if "error" in r.json():
             if r.json()["error"] == 429:
                 t = r.json()["wait_seconds"]
@@ -99,9 +104,11 @@ for i, pix in enumerate(pixels):
                 print(" done, retrying!")
                 continue
             else:
-                print(" ERROR:", r.json(["error"]))
+                print(" ERROR:", r.json()["error"])
                 print("QUITTING!")
                 sys.exit(77)
         else:
-            print(" done!")
+            u["next"] = float(time.time()+r.json()["wait_seconds"])
+            toml.dump({"accounts":users}, open(path()+"/save.toml", "w"))
+            print(" done! (delay: {}s)".format(r.json()["wait_seconds"]))
             break
