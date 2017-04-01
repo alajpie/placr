@@ -94,7 +94,10 @@ else:
     print("  with 10 min delay ->", len(pixels)/len(users)*10, "minutes")
 print("Note: If the program is not displaying anything, it's waiting for an account to become available")
 
-for i, pix in enumerate(pixels):
+i = -1
+while i < len(pixels):
+    i += 1
+    pix = pixels[i]
     d = {"x": pix[0], "y": pix[1], "color": pix[2]}
     while 1:
         while 1:
@@ -133,4 +136,6 @@ for i, pix in enumerate(pixels):
             u["next"] = float(time.time()+r.json()["wait_seconds"])
             toml.dump({"accounts":users}, open(path()+"/save.toml", "w"))
             print(" done! (delay: {}s)".format(round(r.json()["wait_seconds"])))
+            if conf["always_restart"]:
+                i = -1
             break
