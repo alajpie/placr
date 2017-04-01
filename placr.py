@@ -52,10 +52,7 @@ toml.dump({"accounts":users}, open(path()+"/save.toml", "w"))
 
 pixels = []
 text = conf["text"]
-bg = conf["background_color"]
-col = conf["text_color"]
 pos = conf["text_position"]
-fill = conf["fill_background"]
 font = ImageFont.truetype(path()+"/font.ttf", size=7)
 size = ImageDraw.Draw(Image.new("1", (0, 0))).textsize(text, font=font)
 size = (size[0]-1, size[1])
@@ -66,12 +63,14 @@ dots = list(chunks(list(img.getdata()), size[0]))
 
 for y, row in enumerate(dots):
     for x, q in enumerate(row):
-        if fill and q == 0:
-            pixels.append((pos[0]+x, pos[1]+y, bg))
+        if conf["fill_background"] and q == 0:
+            pixels.append((pos[0]+x, pos[1]+y, conf["background_color"], True))
         elif q == 1:
-            pixels.append((pos[0]+x, pos[1]+y, col))
+            pixels.append((pos[0]+x, pos[1]+y, conf["text_color"], False))
 
 pixels.sort(key=lambda x: x[0])
+if conf["background_later"]:
+    pixels.sort(key=lambda x: x[3])
 
 print("Total pixels:", len(pixels))
 print("Calculating progress...", end="", flush=1)
