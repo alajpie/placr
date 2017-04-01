@@ -74,16 +74,15 @@ for y, row in enumerate(dots):
 for i, pix in enumerate(pixels):
     d = {"x": pix[0], "y": pix[1], "color": pix[2]}
     while 1:
-        u = None
-        for x in users:
-            if x["next"] < time.time():
-                u = x
-        if u:
-            break
-        else:
-            time.sleep(5)
-
-    while 1:
+        while 1:
+            u = None
+            for x in users:
+                if x["next"] < time.time():
+                    u = x
+            if u:
+                break
+            else:
+                time.sleep(5)
         r = req.get("https://www.reddit.com/api/place/pixel.json?x={}&y={}".format(d["x"], d["y"]), headers=h)
         try:
             if r.json()["color"] == d["color"]:
@@ -97,11 +96,9 @@ for i, pix in enumerate(pixels):
         r = req.post("https://www.reddit.com/api/place/draw.json", cookies={"reddit_session": u["rs"]}, headers=nh, data=d)
         if "error" in r.json():
             if r.json()["error"] == 429:
-                t = r.json()["wait_seconds"]
-                print(" too soon ({} seconds left)".format(round(t)))
-                print("Sleeping {} seconds...".format(round(t)), end="", flush=1)
-                time.sleep(t)
-                print(" done, retrying!")
+                u["next"] = float(time.time()+r.json()["wait_seconds"])
+                toml.dump({"accounts":users}, open(path()+"/save.toml", "w"))
+                print(" too soon ({} seconds left)".format(round(r.json()["wait_seconds"])))
                 continue
             else:
                 print(" ERROR:", r.json()["error"])
@@ -110,5 +107,5 @@ for i, pix in enumerate(pixels):
         else:
             u["next"] = float(time.time()+r.json()["wait_seconds"])
             toml.dump({"accounts":users}, open(path()+"/save.toml", "w"))
-            print(" done! (delay: {}s)".format(r.json()["wait_seconds"]))
+            print(" done! (delay: {}s)".format(round(r.json()["wait_seconds"])))
             break
