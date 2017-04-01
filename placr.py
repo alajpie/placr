@@ -73,6 +73,23 @@ for y, row in enumerate(dots):
 
 pixels.sort(key=lambda x: x[0])
 
+print("Total pixels:", len(pixels))
+print("Calculating progress...", end="", flush=1)
+for i, pix in enumerate(pixels[:]):
+    d = {"x": pix[0], "y": pix[1], "color": pix[2]}
+    r = req.get("https://www.reddit.com/api/place/pixel.json?x={}&y={}".format(d["x"], d["y"]), headers=h)
+    try:
+        if r.json()["color"] == d["color"]:
+            del pixels[i]
+    except:
+        pass
+print(" done!")
+print("Remaining pixels:", len(pixels))
+print("Estimated time to completion:")
+print("  with 5 min delay ->", len(pixels)/len(users)*5, "minutes")
+print("  with 10 min delay ->", len(pixels)/len(users)*10, "minutes")
+print("Note: If the program is not displaying anything, it's waiting for an account to become available")
+
 for i, pix in enumerate(pixels):
     d = {"x": pix[0], "y": pix[1], "color": pix[2]}
     while 1:
