@@ -75,9 +75,7 @@ if conf["background_later"]:
 
 print("Total pixels:", len(pixels))
 print("Calculating progress...", end="", flush=1)
-if len(pixels) > 200:
-    print(" skipping! (too many to check)")
-elif conf["always_restart"]:
+if conf["always_restart"]:
     print(' skipping! ("always_restart" enabled)')
 else:
     for i, pix in enumerate(pixels[:]):
