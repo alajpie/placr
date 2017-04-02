@@ -90,8 +90,8 @@ else:
     print(" done!")
     print("Remaining pixels:", len(pixels))
     print("Estimated time to completion:")
-    print("  with 5 min delay ->", len(pixels)/len(users)*5, "minutes")
-    print("  with 10 min delay ->", len(pixels)/len(users)*10, "minutes")
+    print("  with 5 min cooldown ->", len(pixels)/len(users)*5, "minutes")
+    print("  with 10 min cooldown ->", len(pixels)/len(users)*10, "minutes")
 print("Note: If the program is not displaying anything, it's waiting for an account to become available")
 
 i = -1
@@ -112,13 +112,13 @@ while i < len(pixels):
         r = req.get("https://www.reddit.com/api/place/pixel.json?x={}&y={}".format(d["x"], d["y"]), headers=h)
         try:
             if r.json()["color"] == d["color"]:
-                print("Skipping pixel #{} ({}, {}) (already correct color)".format(i, d["x"], d["y"]))
+                print(time.strftime("[%H:%M:%S] ")+"Skipping pixel #{} ({}, {}) (already correct color)".format(i, d["x"], d["y"]))
                 break
         except:
             if d["color"] == 0: #blank pixel, never colored
-                print("Skipping pixel #{} ({}, {}) (already correct color)".format(i, d["x"], d["y"]))
+                print(time.strftime("[%H:%M:%S] ")+"Skipping pixel #{} ({}, {}) (already correct color)".format(i, d["x"], d["y"]))
                 break
-        print("Drawing pixel #{} ({}, {}) with {}...".format(i, d["x"], d["y"], u["name"]), end="", flush=1)
+        print(time.strftime("[%H:%M:%S] ")+"Drawing pixel #{} ({}, {}) with {}...".format(i, d["x"], d["y"], u["name"]), end="", flush=1)
         nh = {"X-Modhash": u["mh"]}
         nh.update(h)
         r = req.post("https://www.reddit.com/api/place/draw.json", cookies={"reddit_session": u["rs"]}, headers=nh, data=d)
@@ -135,7 +135,7 @@ while i < len(pixels):
         else:
             u["next"] = float(time.time()+r.json()["wait_seconds"])
             toml.dump({"accounts":users}, open(path()+"/save.toml", "w"))
-            print(" done! (delay: {}s)".format(round(r.json()["wait_seconds"])))
+            print(" done! (cooldown: {}s)".format(round(r.json()["wait_seconds"])))
             if conf["always_restart"]:
                 i = -1
             break
