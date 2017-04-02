@@ -12,16 +12,21 @@ def chunks(l, n):
         yield l[i:i + n]
 
 def get_board():
-    r = req.get("https://www.reddit.com/api/place/board-bitmap")
-    board = [[None for a in range(1000)] for b in range(1000)]
-    f = 4
-    for y in range(1000):
-        for x in range(500):
-            board[x*2][y] = r.content[f] >> 4
-            board[x*2+1][y] = r.content[f] & 0b1111
-            f+=1
-    return board
-
+    for _ in range(5):
+        try:
+            r = req.get("https://www.reddit.com/api/place/board-bitmap")
+            board = [[None for a in range(1000)] for b in range(1000)]
+            f = 4
+            for y in range(1000):
+                for x in range(500):
+                    board[x*2][y] = r.content[f] >> 4
+                    board[x*2+1][y] = r.content[f] & 0b1111
+                    f+=1
+            return board
+        except:
+            continue
+    print("Board fetch failure, QUITTING!")
+    sys.exit(55)
 conf = toml.load(open(path()+"/config.toml"))
 users = conf["accounts"]
 for u in users:
